@@ -12,8 +12,9 @@ Product.init(
     // define columns
     id: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
       allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
     },
 
     product_name: {
@@ -21,14 +22,34 @@ Product.init(
       allowNull: false,
     },
 
-    category_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'category',
-        key: 'id',
-      }
+    price: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+//ensure the price is a decimal
+      validate: {
+        isDecimal: true,
+      },
     },
 
+    stock: {
+      type: DataTypes.INTEGER,
+      defaultValue: 10,
+      validate: {
+//ensure the stock is a value
+        isNumeric: true,
+      },
+    },
+
+    //category_id used to relate each category to product
+    //a category can have many products
+    category_id: {
+      type: DataTypes.INTEGER,
+    //referencing the 'category' model, foreign key relates category to many products
+      references: {
+        model: 'category',
+        key: 'id'
+      },
+    },
   },
   {
     sequelize,
